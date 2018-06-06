@@ -21,8 +21,6 @@ ul {
   border-top: 0;
   width: 100%;
   padding: 5px 0;
-  max-height: 200px;
-  overflow-y: scroll;
 }
 
 .result {
@@ -30,6 +28,10 @@ ul {
   cursor: pointer;
 }
 .result:hover {
+  background-color: #eee;
+}
+
+.selected{
   background-color: #eee;
 }
 
