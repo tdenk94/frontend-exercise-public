@@ -1,6 +1,6 @@
-export default class Autocomplete {
+export default class Autocomplete2 {
   constructor(rootEl, options = {}) {
-    options = Object.assign({ numOfResults: 10, data: [] }, options);
+    options = Object.assign({ numOfResults: 10, users: [] }, options);
     Object.assign(this, { rootEl, options });
 
     this.init();
@@ -8,7 +8,7 @@ export default class Autocomplete {
 
   onQueryChange(query) {
     // Get data for the dropdown
-    let results = this.getResults(query, this.options.data);
+    let results = this.getResults(query, this.options.users);
     results = results.slice(0, this.options.numOfResults);
 
     this.updateDropdown(results);
@@ -19,7 +19,10 @@ export default class Autocomplete {
    */
   getResults(query, data) {
     if (!query) return [];
-    
+
+    console.log('query: ',query);
+    console.log('data: ',data);
+
     // Filter for matching strings
     let results = data.filter((item) => {
       return item.text.toLowerCase().includes(query.toLowerCase());

@@ -1,4 +1,5 @@
 import Autocomplete from './Autocomplete';
+import Autocomplete2 from './Autocomplete2';
 import usStates from './us-states';
 import './main.css';
 import $ from "jquery";
@@ -10,12 +11,14 @@ const data = usStates.map(state => ({
   value: state.abbreviation
 }));
 
+
 // incremental variables for state and github 
 var i = -1;	 // state
 var j = -1;  // github
 
 var disableArrow = false;
 
+// state dropdown
 new Autocomplete(document.getElementById('state'), {
   data,
   onSelect: (stateCode) => {
@@ -23,15 +26,40 @@ new Autocomplete(document.getElementById('state'), {
   },
 });
 
-//Github Users
-// new Autocomplete(document.getElementById('gh-user'), {
-//   onSelect: (ghUserId) => {
-//     console.log('selected github user id:', ghUserId);
-//   },
-// });
+
+var request = new XMLHttpRequest();
+var users;
+
+// Open a new connection, using the GET request on the URL endpoint
+request.open('GET', 'https://api.github.com/search/users?q$tdenk=&per_page=5', true);
+
+request.onload = function () {
+	// Begin accessing JSON data here
+	var data2 = JSON.parse(this.response)['items'];
+
+	if (request.status >= 200 && request.status < 400) {
+		var users = data2.map(user => ({
+			text: user.login,
+			value: user.id
+		}));
+		// Github Users form selection
+		new Autocomplete2(document.getElementById('gh-user'), {
+			users,
+			onSelect: (ghUserId) => {
+				console.log('selected github user id:', ghUserId);
+	  		},
+		});
+	}
+	else {
+		console.log('error');
+	}
+}
+// Send request
+request.send();
 
 
 
+// state form selection
 $(".state-group input").keydown(function(e){
 	var key = e.keyCode;
 	var state = $('.result');
@@ -71,7 +99,6 @@ $(".state-group input").keydown(function(e){
 	    	break;	
 	}
 });
-
 
 // code originally taken and modified from stack overflow (https://stackoverflow.com/questions/1273566/how-do-i-check-if-the-mouse-is-over-an-element-in-jquery?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
 $("#state .results").mouseenter(function(){
