@@ -20,9 +20,6 @@ export default class Autocomplete2 {
   getResults(query, data) {
     if (!query) return [];
 
-    console.log('query: ',query);
-    console.log('data: ',data);
-
     // Filter for matching strings
     let results = data.filter((item) => {
       return item.text.toLowerCase().includes(query.toLowerCase());

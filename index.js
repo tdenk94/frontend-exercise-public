@@ -11,11 +11,9 @@ const data = usStates.map(state => ({
   value: state.abbreviation
 }));
 
-
-// incremental variables for state and github 
+// global variables for state and github forms + mouseover funcationality
 var i = -1;	 // state
-var j = -1;  // github
-
+var j = -1;  // github (wasn't used...would be used to up/down arrow navigation similar to states form)
 var disableArrow = false;
 
 // state dropdown
@@ -26,40 +24,64 @@ new Autocomplete(document.getElementById('state'), {
   },
 });
 
+// Github dropdown
+new Autocomplete2(document.getElementById('gh-user'), {
+	onSelect: (ghUserId) => {
+		console.log('selected github user id:', ghUserId);
+		},
+});
 
-var request = new XMLHttpRequest();
-var users;
+// activate GET request with Github API after typing into field
+$(".gh-users-group input").keyup(function(e){
+	var username = $('#gh-user input').val();
+	var request = new XMLHttpRequest();
+	var users;
 
-// Open a new connection, using the GET request on the URL endpoint
-request.open('GET', 'https://api.github.com/search/users?q$tdenk=&per_page=5', true);
+	// Open a new connection, using the GET request on the URL endpoint
+	request.open('GET', 'https://api.github.com/search/users?q=' + username + '&per_page=10', true);
 
-request.onload = function () {
-	// Begin accessing JSON data here
-	var data2 = JSON.parse(this.response)['items'];
+	request.onload = function () {
+		// Begin accessing JSON data here
+		var data2 = JSON.parse(this.response)['items'];
 
-	if (request.status >= 200 && request.status < 400) {
-		var users = data2.map(user => ({
-			text: user.login,
-			value: user.id
-		}));
-		// Github Users form selection
-		new Autocomplete2(document.getElementById('gh-user'), {
-			users,
-			onSelect: (ghUserId) => {
-				console.log('selected github user id:', ghUserId);
-	  		},
-		});
+		// create users object
+		if (request.status >= 200 && request.status < 400) {
+			var users = data2.map(user => ({
+				text: user.login,
+				value: user.id
+			}));
+
+			// iterate through users object and create dropdown menu
+			$.each( users, function( k, v ) {
+			  $("#gh-user .results").append('<li class="gh-result result">' + v['text'] + '</li>');
+			});
+
+			// respond to a clicked list item in dropdown
+			$( ".gh-result" ).click(function() {
+			  var ghSelected = ($(this).text());
+
+			  // once dropdown item was clicked, search current object to the github id value	
+			  $.each(users, function(x,y){
+	    		if (ghSelected == y['text']){
+	    			console.log('selected github user id:', y['value']);
+		    		};
+		    	});	
+			});
+		}
+
+		// handle common errors with the GET request
+		else {
+			console.log('error');
+		}
 	}
-	else {
-		console.log('error');
-	}
-}
-// Send request
-request.send();
+
+	// Send request
+	request.send();
+});
 
 
 
-// state form selection
+// up/down navigation functionality for the state dropdown
 $(".state-group input").keydown(function(e){
 	var key = e.keyCode;
 	var state = $('.result');
@@ -100,6 +122,7 @@ $(".state-group input").keydown(function(e){
 	}
 });
 
+// used to track when the mouse is hovering over the state dropdown form to take over primary navigation functionality
 // code originally taken and modified from stack overflow (https://stackoverflow.com/questions/1273566/how-do-i-check-if-the-mouse-is-over-an-element-in-jquery?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
 $("#state .results").mouseenter(function(){
     clearTimeout($(this).data('timeoutId'));

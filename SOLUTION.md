@@ -2,9 +2,9 @@
 
 <!-- You can include documentation, additional setup instructions, notes etc. here -->
 
-Hey all. Sorry in advance for solutions being a little rocky...I haven't done too much javascript in my current role for the past ~8 months. 
+Hey all. Sorry in advance for the code not being the absolute cleanest or most optimized...I haven't done too much javascript in my current role for the past ~8 months. 
 
-# Comments on the keyboard shortcuts up/down navigation
+# Comments on the keyboard shortcuts up/down navigation (for state form only)
 
 1) Right now, you can begin to type and it was display up to 10 results that match the query. 
 
@@ -16,3 +16,14 @@ Hey all. Sorry in advance for solutions being a little rocky...I haven't done to
 
 5) Can continue to type and edit the query after hitting enter on navigation. Need to refocus the input form though on click if you select an option via mouse click.
 
+# Comments on the API Endpoint / github form
+
+1) Due to the time constaint, I didn't optimize it to accept any HTTP endpoint. As you can see in line 45, I have a code parsing the JSON and then ['items'], where not all API endpoint data will be wrapped within an 'item'. This is something, given more time, would look to make more scalable to accept all sorts of endpoints.
+
+2) Once completing the Github form, I was at just about at 4 hours and had a good amount of other work to do...so didn't implement the up/down arrow functionality on the github form. I figured the functionality for the state form would suffice for showing ability to do up/down navigation via arrows, and the focus of github form was to set up a realtime API integration. Given more time I would have created a function to determine which form was in focus and allow up/down navigation for that dropdown, while hiding the other dropdown (or removing the form query). I would have also done #4 above but for both forms, so there's only 1 form in focus at a time, with optimized navigation for mouse + keys.
+
+# Other comments
+
+1) I know some of the code isn't optimized. Given the time crunch and me trying to squeeze this project in at night, I went more for functionality than performance and scalability. I'm aware of that and given more time, could identify and fix some of those issues.
+
+2) Being slightly OCD about UI/UX my first temptation was to style the forms / page to improve the aesthetics...but maybe that was me just stalling from brushing off my JS rust. Thanks for your time.
